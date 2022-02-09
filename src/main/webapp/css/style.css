@@ -1,28 +1,21 @@
+section {
+    width: 900px;
+    margin: auto;
+}
+
+dl {
+    background: none repeat scroll 0 0 #FAFAFA;
+    margin: 8px 0;
+    padding: 0;
+}
+
 dt {
-    float: left;
-    clear: left;
-    width: 100px;
-    padding: 5px 0;
-    margin:0;
+    display: inline-block;
+    width: 170px;
 }
+
 dd {
-    float: left;
-    width: 100px;
-    padding: 5px 0;
-    margin:0;
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: top;
 }
-.cf:after {
-    content:'';
-    display:table;
-    clear:both;
-}
-
-div.container3 {
-    text-align: center;
-    align-items: center }
-
-table.container5 {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50em }
