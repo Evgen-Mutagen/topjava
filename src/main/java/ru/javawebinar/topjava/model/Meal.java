@@ -12,14 +12,14 @@ public class Meal {
 
     private int calories;
 
-    private int id;
+    private Integer id;
 
     public Meal() {
 
     }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
-        this(0, dateTime, description, calories);
+        this(null, dateTime, description, calories);
     }
 
     public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
@@ -28,6 +28,7 @@ public class Meal {
         this.description = description;
         this.calories = calories;
     }
+
 
     public LocalDateTime getDateTime() {
         return dateTime;
@@ -55,5 +56,19 @@ public class Meal {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isNew() {
+        return id == null;
+    }
+
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "dateTime=" + dateTime +
+                ", description='" + description + '\'' +
+                ", calories=" + calories +
+                ", id=" + id +
+                '}';
     }
 }

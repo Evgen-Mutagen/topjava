@@ -8,30 +8,29 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
-    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <title>Список еды</title>
 </head>
 <body>
 <section>
-    <form method="post" action="meals" enctype="application/x-www-form-urlencoded">
+    <hr>
+    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
+    <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
-            <dt>Дата</dt>
-            <dd><input type="text" name="dateTime" size=50
-                       value="<%= meal.getDateTime().format(TimeUtil.getDataFormatter())%>"></dd>
+            <dt>Дата:</dt>
+            <dd><input type="datetime-local" value="${meal.dateTime}" name="dateTime" required></dd>
         </dl>
         <dl>
             <dt>Описание</dt>
-            <dd><input type="text" name="description" size=50 value="${meal.description}"></dd>
+            <dd><input type="text" value="${meal.description}" size=40 name="description" required></dd>
         </dl>
         <dl>
-            <dt>Калории</dt>
-            <dd><input type="text" name="calories" size=50 value="${meal.calories}"></dd>
+            <dt>Калорииs:</dt>
+            <dd><input type="number" value="${meal.calories}" name="calories" required></dd>
         </dl>
-        <hr>
         <button type="submit">Сохранить</button>
+        <button onclick="window.history.back()" type="button">Назад</button>
     </form>
-    <button onclick="window.history.back()">Назад</button>
 </section>
 </body>
 </html>

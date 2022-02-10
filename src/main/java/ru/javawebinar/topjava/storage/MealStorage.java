@@ -2,14 +2,15 @@ package ru.javawebinar.topjava.storage;
 
 import ru.javawebinar.topjava.model.Meal;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface MealStorage {
     Meal save(Meal meal);
 
-    Meal get(int uuid);
+    Meal get(int id);
 
-    void delete(int uuid);
+    void delete(int id);
 
-    List<Meal> getAll();
+    Collection<Meal> getAll();
 }

@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MapMealStorage implements MealStorage {
+public class InMemoryMealStorage implements MealStorage {
     private final Map<Integer, Meal> storage = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
@@ -24,11 +24,14 @@ public class MapMealStorage implements MealStorage {
 
     @Override
     public Meal save(Meal meal) {
-        if (meal.getId() == 0) {
+        if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
+            storage.put(meal.getId(), meal);
+            return meal;
         }
-        return storage.put(meal.getId(), meal);
+        return storage.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
+
 
     @Override
     public Meal get(int id) {
@@ -41,7 +44,7 @@ public class MapMealStorage implements MealStorage {
     }
 
     @Override
-    public List<Meal> getAll() {
-        return new ArrayList<>(storage.values());
+    public Collection<Meal> getAll() {
+        return storage.values();
     }
 }

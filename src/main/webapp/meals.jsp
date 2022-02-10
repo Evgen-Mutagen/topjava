@@ -11,28 +11,31 @@
 <h1>Список еды</h1>
 <section>
     <table border="1" cellpadding="8" cellspacing="0">
-    <tr>
-        <th>Дата</th>
-        <th>Описание</th>
-        <th>Калории</th>
-        <th>Action</th>
-        <th></th>
-        <th></th>
-    </tr>
-    <c:forEach items="${meals}" var="meal">
-        <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
-        <tr style="color: ${meal.excess ? "red" : "green"}">
-            <td><%= meal.getDateTime().format(TimeUtil.DATE_FORMATTER)%>
-            </td>
-            <td>${meal.description}</td>
-            <td>${meal.calories}</td>
-            <td>${meal.excess}</td>
-            <<td><a href="meals?id=${meal.id}&action=edit" class="button">Edit</a></td>
-        <td><a href="meals?id=${meal.id}&action=delete" class="button">Delete</a></td>
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Описание</th>
+            <th>Калории</th>
+            <th>Редактирование</th>
+            <th>Удаление</th>
         </tr>
-    </c:forEach>
-</table>
+        </thead>
+        <c:forEach items="${meals}" var="meal">
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
+            <tr style="color: ${meal.excess ? "red" : "green"}">
+                <td>
+                ${meal.getDateTime().format(TimeUtil.DATE_FORMATTER)}
+                </td>
+                <td>${meal.description}</td>
+                <td>${meal.calories}</td>
+
+                <td><a href="meals?id=${meal.id}&action=insert" class="button">Edit</a></td>
+                <td><a href="meals?id=${meal.id}&action=delete" class="button">Delete</a></td>
+            </tr>
+        </c:forEach>
+    </table>
     <br>
     <p><a href="meals?action=insert" class="button">Добавить еду</a></p>
-    <section>
+    </section>
+</body>
 </html>
