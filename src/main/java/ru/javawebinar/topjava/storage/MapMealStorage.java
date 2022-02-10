@@ -24,7 +24,7 @@ public class MapMealStorage implements MealStorage {
 
     @Override
     public Meal save(Meal meal) {
-        if (meal.getId() == null) {
+        if (meal.getId() == 0) {
             meal.setId(counter.incrementAndGet());
         }
         return storage.put(meal.getId(), meal);

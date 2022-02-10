@@ -28,7 +28,7 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
-        LocalDateTime localDateTime = LocalDateTime.parse(request.getParameter("datetime"), TimeUtil.getDataFormatter());
+        LocalDateTime localDateTime = LocalDateTime.parse(request.getParameter("datetime"), TimeUtil.DATE_FORMATTER);
         Meal meal = id == null ? new Meal(localDateTime, description, calories) :
                 new Meal(Integer.parseInt(id), localDateTime, description, calories);
         storage.save(meal);
@@ -59,10 +59,9 @@ public class MealServlet extends HttpServlet {
                 request.getRequestDispatcher("edit.jsp").forward(request, response);
                 break;
             default:
-                final int caloriesPerDay = 2000;
                 log.info("getAll");
                 request.setAttribute("meals", MealsUtil.filteredByStreams(storage.getAll(),
-                        LocalTime.MIN, LocalTime.MAX, caloriesPerDay));
+                        LocalTime.MIN, LocalTime.MAX, MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 request.getRequestDispatcher("meals.jsp").forward(request, response);
         }
     }
