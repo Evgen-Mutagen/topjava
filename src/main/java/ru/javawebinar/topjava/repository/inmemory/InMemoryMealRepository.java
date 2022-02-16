@@ -26,8 +26,8 @@ public class InMemoryMealRepository implements MealRepository {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(meal -> save(InMemoryUserRepository.USER_ID, meal));
-        save(InMemoryUserRepository.USER_ID, new Meal(LocalDateTime.now(), "Пышки", 2000));
+        MealsUtil.meals.forEach(meal -> save(1, meal));
+        save(2, new Meal(LocalDateTime.now(), "Пышки", 2000));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class InMemoryMealRepository implements MealRepository {
     public boolean delete(int userId, int id) {
         log.info("delete userId= {} id= {}", userId, id);
         Map<Integer, Meal> userMeals = repository.get(userId);
-        return userMeals.remove(userId) != null;
+        return  userMeals != null && !(userMeals.remove(id) == null);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> getByDate(int userId, LocalDate startDate, LocalDate endDate) {
         log.info("getByDate userId= {} endDate= {} startDate= {}", userId, startDate, endDate);
-        return getFiltered(userId, meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime(), startDate, endDate));
+        return getFiltered(userId, meal -> DateTimeUtil.isBetweenHalfOpen(meal.getId(), startDate, endDate));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class InMemoryMealRepository implements MealRepository {
         return getFiltered(userId, meal -> true);
     }
 
-    public List<Meal> getFiltered(int userId, Predicate<Meal> filter) {
+    private  List<Meal> getFiltered(int userId, Predicate<Meal> filter) {
         log.info("getFiltered userId= {} filter= {}", userId, filter);
         Map<Integer, Meal> userMeals = repository.get(userId);
         return userMeals == null ? Collections.emptyList() : userMeals.values().stream()

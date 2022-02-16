@@ -19,7 +19,7 @@ import java.util.List;
 public class MealRestController {
     private final MealService service;
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public MealRestController(MealService service) {

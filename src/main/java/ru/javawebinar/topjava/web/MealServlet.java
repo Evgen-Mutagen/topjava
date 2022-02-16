@@ -26,19 +26,12 @@ public class MealServlet extends HttpServlet {
     private MealRestController mealContr;
     private ConfigurableApplicationContext appCtx;
 
-    @PostConstruct
     @Override
     public void init() {
         appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         mealContr = appCtx.getBean(MealRestController.class);
     }
 
-    @PreDestroy
-    @Override
-    public void destroy() {
-        super.destroy();
-        appCtx.close();
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
