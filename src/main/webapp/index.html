@@ -10,16 +10,15 @@
     <li><a href="users">Users</a></li>
     <li><a href="meals">Meals</a></li>
 <br><br>
-    <form action="users" id="user">
-    <li>select User
-        <select name="id" form="user">
-            <option selected disabled>Выберите пользователя</option>
-            <option value=“1">Зайти как User</option>
-            <option value=“2”>Зайти как Admin</option>
+    <hr>
+    <form method="post" action="users">
+        <b style="font-size: large">Meals of&nbsp;</b>
+        <select name="userId">
+            <option value="1">User</option>
+            <option value="2">Admin</option>
         </select>
-        <button type="submit">Подвердить</button>
-    </li>
-</form>
+        <button type="submit">Select</button>
+    </form>
 </ul>
 </body>
 </html>
