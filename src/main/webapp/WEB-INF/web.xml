@@ -5,10 +5,6 @@
          version="4.0">
 
     <display-name>Topjava</display-name>
-    <context-param>
-        <param-name>javax.faces.CONFIG_FILES</param-name>
-        <param-value>/faces-config.xml</param-value>
-    </context-param>
 
     <servlet>
         <servlet-name>userServlet</servlet-name>
@@ -25,18 +21,9 @@
         <servlet-class>ru.javawebinar.topjava.web.MealServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
-    <servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
     <servlet-mapping>
         <servlet-name>mealServlet</servlet-name>
         <url-pattern>/meals</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
 
 </web-app>
