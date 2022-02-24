@@ -11,14 +11,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTesData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
-import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -44,6 +45,16 @@ public class MealServiceTest {
     }
 
     @Test
+    public void getNotOwn() {
+        assertThrows(NotFoundException.class, () -> service.get(userMeal2.getId(), ADMIN_ID));
+    }
+
+    @Test
+    public void getNotFound() {
+        assertThrows(NotFoundException.class, () -> service.get(300_000, USER_ID));
+    }
+
+    @Test
     public void delete() {
         service.delete(adminMeal1.getId(), ADMIN_ID);
         assertThrows(NotFoundException.class, () -> service.get(adminMeal1.getId(), ADMIN_ID));
@@ -55,9 +66,21 @@ public class MealServiceTest {
     }
 
     @Test
-    public void getBetweenInclusive() {
-        assertMatch(service.getBetweenInclusive(userMeal2.getDate(), userMeal2.getDate(), USER_ID));
+    public void deleteNotOwn() {
+        assertThrows(NotFoundException.class, () -> service.delete(userMeal1.getId(), ADMIN_ID));
     }
+
+    @Test
+    public void getBetweenInclusive() {
+        assertMatch(service.getBetweenInclusive(LocalDate.of(2020, Month.JANUARY, 30),
+                        LocalDate.of(2020, Month.JANUARY, 30), USER_ID), userMeal3, userMeal2, userMeal1);
+    }
+
+    @Test
+    public void getBetweenWithNullDates() {
+       assertMatch(service.getBetweenInclusive(null, null, USER_ID), userMeal3, userMeal2, userMeal1);
+    }
+
 
     @Test
     public void getAll() {
@@ -82,10 +105,18 @@ public class MealServiceTest {
     }
 
     @Test
+    public void updateNotOwn() {
+        assertThrows(NotFoundException.class, () -> service.update(userMeal1, ADMIN_ID));
+        assertMatch(service.get(userMeal1.getId(), USER_ID), userMeal1);
+    }
+
+    @Test
     public void create() {
+        Meal created = service.create(getNewMeal(), USER_ID);
+        int newId = created.getId();
         Meal newMeal = getNewMeal();
-        Meal created = service.create(newMeal, USER_ID);
-        newMeal.setId(created.getId());
-        assertMatch(service.getAll(USER_ID), newMeal, userMeal3, userMeal2, userMeal1);
+        newMeal.setId(newId);
+        assertMatch(created, newMeal);
+        assertMatch(service.get(newId, USER_ID), newMeal);
     }
 }
