@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.String.valueOf;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -41,19 +42,16 @@ public class MealServiceTest {
 
     @Rule
     public final Stopwatch stopwatch = new Stopwatch() {
-        public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
-
         @Override
         protected void finished(long nanos, Description description) {
             String result = String.format("%-95s %7d", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
-            log.info(result + " ms\n");
             results.append(result).append('\n');
         }
     };
 
     @AfterClass
     public static void result() {
-        System.out.println(results);
+        log.info(valueOf(results));
     }
 
     @Test

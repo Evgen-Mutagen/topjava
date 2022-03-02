@@ -16,9 +16,7 @@ import java.time.LocalTime;
 })
 @Entity
 @Table(name = "meals", uniqueConstraints = {
-        @UniqueConstraint(name = "meals_unique_user_datetime_idx", columnNames = {
-                "user_id", "date_time"})})
-
+        @UniqueConstraint(name = "meals_unique_user_datetime_idx", columnNames = {"user_id", "date_time"})})
 public class Meal extends AbstractBaseEntity {
     public static final String DELETE = "delete_meal";
     public static final String ALL_SORTED = "get_all_meals";
@@ -34,10 +32,10 @@ public class Meal extends AbstractBaseEntity {
     private String description;
 
     @Column(name = "calories", nullable = false)
-    @NotNull
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
