@@ -127,6 +127,10 @@ public class User extends AbstractNamedEntity {
         return password;
     }
 
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
     @Override
     public String toString() {
         return "User{" +
