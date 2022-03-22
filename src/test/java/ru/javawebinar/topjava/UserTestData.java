@@ -21,11 +21,12 @@ public class UserTestData {
     public static final User guest = new User(GUEST_ID, "Guest", "guest@gmail.com", "guest");
 
     public static User getNew() {
-        return new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.USER));
+        return new User(null, "New", "new@gmail.com", "newPass", 1555, false,
+                new Date(), Collections.singleton(Role.USER));
     }
 
     public static User getUpdated() {
-        User updated = new User(user);
+        User updated = new User(admin);
         updated.setEmail("update@gmail.com");
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);

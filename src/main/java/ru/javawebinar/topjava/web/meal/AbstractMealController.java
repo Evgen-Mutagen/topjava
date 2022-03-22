@@ -18,11 +18,11 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 public abstract class AbstractMealController {
 
-    private static final Logger log = LoggerFactory.getLogger(ru.javawebinar.topjava.web.meal.MealRestController.class);
+    private static final Logger log = LoggerFactory.getLogger(ru.javawebinar.topjava.web.meal.AbstractMealController .class);
 
     private MealService service;
 
-    public AbstractMealController(MealService service) {
+    AbstractMealController(MealService service) {
         this.service = service;
     }
 

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class RootController {
-    private static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
+    private static final Logger log = LoggerFactory.getLogger(RootController.class);
 
     @Autowired
     private UserService service;
@@ -48,6 +48,7 @@ public class RootController {
 
     @GetMapping("/meals")
     public String getMeals(Model model) {
+        log.info("meals");
         model.addAttribute("meals", MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()),
                 SecurityUtil.authUserCaloriesPerDay()));
         return "meals";

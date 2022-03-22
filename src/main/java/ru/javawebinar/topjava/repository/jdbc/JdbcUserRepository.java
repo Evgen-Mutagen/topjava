@@ -46,8 +46,7 @@ public class JdbcUserRepository implements UserRepository {
             user.setId(newKey.intValue());
 
             jdbcTemplate.batchUpdate(
-                    "INSERT INTO  user_roles (user_id, role) VALUES (?,?)",user.getRoles(),
-                    10,
+                    "INSERT INTO  user_roles (user_id, role) VALUES (?,?)", user.getRoles(), 10,
                     (ps, argument) -> {
                         ps.setInt(1, user.getId());
                         ps.setString(2, argument.name());
@@ -77,7 +76,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User getByEmail(String email) {
-        List<User> users = jdbcTemplate.query( " SELECT * FROM users u " +
+        List<User> users = jdbcTemplate.query(" SELECT * FROM users u " +
                 " left join user_roles ur on u.id = ur.user_id" +
                 " WHERE u.email=?", ROW_MAPPER, email);
         return DataAccessUtils.singleResult(users);
