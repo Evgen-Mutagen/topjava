@@ -5,9 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.dao.DataAccessException;
-import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
@@ -36,7 +34,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Before
     public void setup() {
         cacheManager.getCache("users").clear();
-        if (!jdbcProfile(JDBC) ){
+        if (!jdbcProfile(JDBC)) {
             jpaUtil.clear2ndLevelHibernateCache();
         }
     }
@@ -54,11 +52,11 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Test
     public void duplicateMailCreate() {
         assertThrows(DataAccessException.class, () ->
-                service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass",Role.USER, Role.ADMIN)));
+                service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.USER, Role.ADMIN)));
     }
 
     @Test
-    public void delete() throws Exception{
+    public void delete() throws Exception {
         service.delete(ADMIN_ID);
         assertThrows(NotFoundException.class, () -> service.get(ADMIN_ID));
     }
@@ -69,7 +67,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void get()  {
+    public void get() {
         User user = service.get(ADMIN_ID);
         USER_MATCHER.assertMatch(user, admin);
     }

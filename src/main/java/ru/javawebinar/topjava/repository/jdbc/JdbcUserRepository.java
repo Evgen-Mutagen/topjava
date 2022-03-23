@@ -9,10 +9,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.List;
+import javax.validation.*;
+import java.util.*;
 
 @Repository
 @Transactional(readOnly = true)
@@ -25,6 +27,7 @@ public class JdbcUserRepository implements UserRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final SimpleJdbcInsert insertUser;
+
 
     @Autowired
     public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -39,6 +42,12 @@ public class JdbcUserRepository implements UserRepository {
     @Transactional
     @Override
     public User save(User user) {
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        Validator validator = validatorFactory.getValidator();
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
 
         if (user.isNew()) {
@@ -69,22 +78,30 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User get(int id) {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users JOIN user_roles " +
-                "ON users.id = user_roles.user_id WHERE users.id=?", ROW_MAPPER, id);
-        return DataAccessUtils.singleResult(users);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id);
+        return getRoles(Objects.requireNonNull(DataAccessUtils.singleResult(users)));
     }
 
     @Override
     public User getByEmail(String email) {
-        List<User> users = jdbcTemplate.query(" SELECT * FROM users u " +
-                " left join user_roles ur on u.id = ur.user_id" +
-                " WHERE u.email=?", ROW_MAPPER, email);
-        return DataAccessUtils.singleResult(users);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
+        return getRoles(Objects.requireNonNull(DataAccessUtils.singleResult(users)));
     }
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query("SELECT * FROM users JOIN user_roles ON users.id = user_roles.user_id" +
-                " ORDER BY name, email", ROW_MAPPER);
+        Map<Integer, Set<Role>> mapRoles = new LinkedHashMap<>();
+        jdbcTemplate.query("SELECT * FROM user_roles", ps -> {
+            mapRoles.computeIfAbsent(ps.getInt("user_id"), userId -> EnumSet.noneOf(Role.class))
+                    .add(Role.valueOf(ps.getString("role")));
+        });
+        List<User> users = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        users.forEach(user -> user.setRoles(mapRoles.get(user.getId())));
+        return users;
+    }
+
+    public User getRoles(User user) {
+        user.setRoles(jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", Role.class, user.getId()));
+        return user;
     }
 }
