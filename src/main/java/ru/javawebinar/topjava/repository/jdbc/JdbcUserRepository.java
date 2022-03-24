@@ -101,7 +101,9 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     public User getRoles(User user) {
-        user.setRoles(jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", Role.class, user.getId()));
+        if (user != null) {
+            user.setRoles(jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", Role.class, user.getId()));
+        }
         return user;
     }
 }
