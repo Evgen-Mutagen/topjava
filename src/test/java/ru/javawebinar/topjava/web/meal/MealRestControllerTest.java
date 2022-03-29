@@ -81,9 +81,20 @@ class MealRestControllerTest extends AbstractControllerTest {
         MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
     }
 
+//    @Test
+//    void getBetween() throws Exception {
+//        perform(MockMvcRequestBuilders.get(REST_URL + "between?start=2020-01-31T00:00&end=2020-01-31T12:00"))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(MEAL_TO_MATCHER.contentJson(
+//                        createTo(meal5, true),
+//                        createTo(meal4, true)));
+//    }
+
     @Test
     void getBetween() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "between?startDate=2020-01-31&startTime=00-00&endDate=2020-01-31&endTime=15-00"))
+        perform(MockMvcRequestBuilders.get(REST_URL +
+                "between?startDate=2020-01-31&startTime=00-00&endDate=2020-01-31&endTime=12-00"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MEAL_TO_MATCHER.contentJson(
