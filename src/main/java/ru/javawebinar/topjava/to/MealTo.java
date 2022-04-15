@@ -22,7 +22,6 @@ public class MealTo extends BaseTo implements Serializable {
     @Size(min = 2, max = 100)
     private String description;
 
-    @NotNull
     @Range(min = 10, max = 5000, message = "length must be between 10 and 5000 characters")
     private int calories;
 
@@ -54,6 +53,22 @@ public class MealTo extends BaseTo implements Serializable {
 
     public boolean isExcess() {
         return excess;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
+    public void setExcess(boolean excess) {
+        this.excess = excess;
     }
 
     @Override
