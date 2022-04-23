@@ -2,7 +2,7 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,10 +30,10 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ExceptionInfoHandler {
     private static Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
-    private final ReloadableResourceBundleMessageSource bundleMessageSource;
+    private final MessageSource messageSource;
 
-    public ExceptionInfoHandler(ReloadableResourceBundleMessageSource bundleMessageSource) {
-        this.bundleMessageSource = bundleMessageSource;
+    public ExceptionInfoHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 
     //  http://stackoverflow.com/a/22358422/548473
@@ -43,17 +43,6 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
     }
 
-    @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        Throwable rootCause = ValidationUtil.getRootCause(e);
-        log.error(DATA_ERROR + " at request " + req.getRequestURL(), rootCause);
-        if (rootCause.toString().contains("users_unique_email_idx")) {
-            return new ErrorInfo(req.getRequestURL(), DATA_ERROR, bundleMessageSource.getMessage
-                    ("valid.userForm.duplicateMail", null, getLocale()));
-        }
-        return new ErrorInfo(req.getRequestURL(), DATA_ERROR, rootCause.toString());
-    }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class,
@@ -66,6 +55,18 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(Exception.class)
     public ErrorInfo handleError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, true, APP_ERROR);
+    }
+
+    @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+        Throwable rootCause = ValidationUtil.getRootCause(e);
+        log.error(DATA_ERROR + " at request " + req.getRequestURL(), rootCause);
+        if (rootCause.toString().contains("users_unique_email_idx")) {
+            return new ErrorInfo(req.getRequestURL(), DATA_ERROR, messageSource.getMessage
+                    ("valid.user.duplicateMail", null, getLocale()));
+        }
+        return new ErrorInfo(req.getRequestURL(), DATA_ERROR, rootCause.toString());
     }
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
